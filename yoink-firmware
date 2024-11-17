@@ -20,16 +20,16 @@ FW_PATH="$DESTDIR/lib/firmware/"
 GPU_PATH="$(cat /sys/firmware/devicetree/base/soc\@0/gpu\@3d00000/zap-shader/firmware-name)"
 GPU_NAME="$(basename $GPU_PATH)"
 
-ADSP_PATH1="$(head -z -n1 < /sys/firmware/devicetree/base/soc\@0/remoteproc\@30000000/firmware-name)"
+ADSP_PATH1="$(cat /sys/firmware/devicetree/base/soc\@0/remoteproc\@30000000/firmware-name | tr -s '\0' '\n' | head -n1)"
 ADSP_NAME1="$(basename $ADSP_PATH1)"
 
-ADSP_PATH2="$(tail -z -n1 < /sys/firmware/devicetree/base/soc\@0/remoteproc\@30000000/firmware-name)"
+ADSP_PATH2="$(cat /sys/firmware/devicetree/base/soc\@0/remoteproc\@30000000/firmware-name | tr -s '\0' '\n' | tail -n1)"
 ADSP_NAME2="$(basename $ADSP_PATH2)"
 
-CDSP_PATH1="$(head -z -n1 < /sys/firmware/devicetree/base/soc\@0/remoteproc\@32300000/firmware-name)"
+CDSP_PATH1="$(cat /sys/firmware/devicetree/base/soc\@0/remoteproc\@32300000/firmware-name | tr -s '\0' '\n' | head -n1)"
 CDSP_NAME1="$(basename $CDSP_PATH1)"
 
-CDSP_PATH2="$(tail -z -n1 < /sys/firmware/devicetree/base/soc\@0/remoteproc\@32300000/firmware-name)"
+CDSP_PATH2="$(cat /sys/firmware/devicetree/base/soc\@0/remoteproc\@32300000/firmware-name | tr -s '\0' '\n' | tail -n1)"
 CDSP_NAME2="$(basename $CDSP_PATH2)"
 
 function file_repo_path() {
