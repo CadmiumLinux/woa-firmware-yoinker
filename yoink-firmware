@@ -7,8 +7,15 @@ if [ -z "$DESTDIR" ]; then
 fi
 
 # Copy over firmware files from windows installation
-mkdir /windows
-mount /dev/disk/by-label/Windows /windows -t ntfs3 -r
+mkdir -p /windows
+type="$(command -v mount.ntfs3)"
+if [ -n "$type" ]; then
+	type="ntfs3"
+else
+	type="ntfs"
+fi
+
+mount /dev/disk/by-label/Windows /windows -t "$type" -r 
 function umount_windows() {
 	umount /windows
 	rmdir /windows
