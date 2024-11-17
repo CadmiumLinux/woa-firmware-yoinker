@@ -36,11 +36,23 @@ function file_repo_path() {
 	find /windows/Windows/System32/DriverStore/FileRepository/ -name "$1" -exec ls -t {} + | head -n1
 }
 
-cp "$(file_repo_path $GPU_NAME)" "$FW_PATH/$GPU_PATH"
-cp "$(file_repo_path $ADSP_NAME1)" "$FW_PATH/$ADSP_PATH1"
-cp "$(file_repo_path $ADSP_NAME2)" "$FW_PATH/$ADSP_PATH2"
-cp "$(file_repo_path $CDSP_NAME1)" "$FW_PATH/$CDSP_PATH1"
-cp "$(file_repo_path $CDSP_NAME2)" "$FW_PATH/$CDSP_PATH2"
+function copy_fw() {
+	local name="$1"
+	local target="$2"
+	local src=
+
+	mkdir -p "$(dirname "$target")"
+	src="$(file_repo_path "$name")"
+
+	echo "Copying $src to $target"
+	cp "$src" "$target"
+}
+
+copy_fw "$GPU_NAME" "$FW_PATH/$GPU_PATH"
+copy_fw "$ADSP_NAME1" "$FW_PATH/$ADSP_PATH1"
+copy_fw "$ADSP_NAME2" "$FW_PATH/$ADSP_PATH2"
+copy_fw "$CDSP_NAME1" "$FW_PATH/$CDSP_PATH1"
+copy_fw "$CDSP_NAME2" "$FW_PATH/$CDSP_PATH2"
 
 BT_FIRMWARES='hmtbtfw20.tlv hmtnv20.b112'
 BT_FIRMWARE_PATHS=""
@@ -51,5 +63,6 @@ done
 
 mkdir -p "$DESTDIR/lib/firmware/qca"
 for FILE in $BT_FIRMWARE_PATHS; do
+	echo "Copying $FILE to $DESTDIR/lib/firmware/qca/"
 	cp "$FILE" "$DESTDIR/lib/firmware/qca/"
 done
