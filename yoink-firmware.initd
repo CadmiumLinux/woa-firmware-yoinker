@@ -1,0 +1,26 @@
+#!/sbin/openrc-run
+
+description="Pull firmware from windows."
+
+depend()
+{
+	after udev-postmount
+}
+
+start()
+{
+	# Skip if already done
+	[[ -f /var/cache/.firmware-yoinked ]] && return 0
+	ebegin "Pulling firmware from windows"
+	DESTDIR=/ /usr/libexec/yoink-firmware
+	STATUS=$?
+	if [ STATUS = 0 ]; then
+		touch /var/cache/.firmware-yoinked
+	fi
+	eend $STATUS
+}
+
+stop()
+{
+	return 0
+}
