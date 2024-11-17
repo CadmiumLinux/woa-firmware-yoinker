@@ -1,0 +1,23 @@
+[Unit]
+Description=Pull firmware from windows
+DefaultDependencies=no
+Wants=systemd-udevd.service
+After=systemd-udevd.service
+# We can't pull firmware if we can't find the Windows partition
+ConditionPathExists=/dev/disk/by-label/Windows
+# We only want to do this once, so we create this flag file
+# after a successful run.
+# We would ideally do ConditionFirstBoot=yes instead but
+# not all distros currently support this.
+ConditionPathExists=!/var/cache/.firmware-yoinked
+
+[Service]
+Type=oneshot
+TimeoutSec=0
+Environment=DESTDIR=/
+ExecStart=/usr/libexec/yoink-firmware
+ExecStartPost=touch /var/cache/.firmware-yoinked
+
+[Install]
+WantedBy=sysinit.target
+
